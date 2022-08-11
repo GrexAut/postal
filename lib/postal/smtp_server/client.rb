@@ -106,6 +106,10 @@ module Postal
 
       def resolve_hostname
         @hostname = Resolv.new.getname(@ip_address) rescue @ip_address
+        Resolv::DNS.open do |dns|
+          dns.timeouts = [10,5]
+          @hostname = dns.getname(@ip_address) rescue @ip_address
+        end
       end
 
       def proxy(data)
